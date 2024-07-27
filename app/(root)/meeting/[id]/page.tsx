@@ -7,7 +7,7 @@ import { useParams } from "next/navigation";
 import { Loader } from "lucide-react";
 
 import { useGetCallById } from "@/hooks/useGetCallById";
-// import Alert from '@/components/Alert';
+import Alert from "@/components/Alert";
 import MeetingSetup from "@/components/MeetingSetup";
 import MeetingRoom from "@/components/MeetingRoom";
 
@@ -31,8 +31,8 @@ const MeetingPage = () => {
     call.type === "invited" &&
     (!user || !call.state.members.find((m) => m.user.id === user.id));
 
-  // if (notAllowed)
-  //   return <Alert title="You are not allowed to join this meeting" />;
+  if (notAllowed)
+    return <Alert title="You are not allowed to join this meeting" />;
 
   return (
     <main className="h-screen w-full">

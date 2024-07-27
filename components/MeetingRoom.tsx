@@ -9,7 +9,7 @@ import {
   SpeakerLayout,
   useCallStateHooks,
 } from "@stream-io/video-react-sdk";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Users, LayoutList } from "lucide-react";
 
 import {
@@ -30,20 +30,21 @@ import { useUser } from "@clerk/nextjs";
 type CallLayoutType = "grid" | "speaker-left" | "speaker-right";
 
 const MeetingRoom = () => {
+  const { id } = useParams();
   const searchParams = useSearchParams();
   const isPersonalRoom = !!searchParams.get("personal");
   const router = useRouter();
   const [layout, setLayout] = useState<CallLayoutType>("speaker-left");
   const [showParticipants, setShowParticipants] = useState(false);
   const { useCallCallingState } = useCallStateHooks();
-  const { user } = useUser();
 
   // for more detail about types of CallingState see: https://getstream.io/video/docs/react/ui-cookbook/ringing-call/#incoming-call-panel
   const callingState = useCallCallingState();
   const { toast } = useToast();
 
-  const meetingId = user?.id;
-  const meetingLink = `${process.env.NEXT_PUBLIC_BASE_URL}/meeting/${meetingId}?instant=true`;
+  const meetingId = id;
+  const meetingLink = `${process.env.NEXT_PUBLIC_BASE_URL}/meeting/${meetingId}`;
+  console.log("meetingLink", meetingLink);
 
   if (callingState !== CallingState.JOINED) return <Loader />;
 
@@ -118,7 +119,7 @@ const MeetingRoom = () => {
             &nbsp; Copy
           </Button>
         )}
-        {!isPersonalRoom && <EndCallButton />}
+        {isPersonalRoom && <EndCallButton />}
       </div>
     </section>
   );
